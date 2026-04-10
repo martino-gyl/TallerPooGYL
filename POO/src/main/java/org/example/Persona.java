@@ -5,6 +5,8 @@ public class Persona {
     public String nombre;
     public int edad;
     public boolean camina;
+    public boolean vuela = false;
+
     // Metodos / acciones
     public void mostrarPersona() {
         System.out.println("Nombre: " + nombre);
@@ -17,4 +19,11 @@ public class Persona {
             System.out.println("No puede caminar");
         }
     }
-   }
+    public void puedeVolar() {
+        if (this.vuela) {
+            System.out.println("Si puede volar");
+        } else {
+            System.out.println("No puede volar");
+        }
+    }
+}

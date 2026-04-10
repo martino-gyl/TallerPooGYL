@@ -15,6 +15,15 @@ public class Main {
 
         objPersona1.nombre = "Lionel Andres Messi";
         objPersona1.mostrarPersona();
+        objPersona1.puedeVolar();
+
+        Persona objPersona2 = new Persona();
+        objPersona2.nombre = "Emiliano Martinez";
+        objPersona2.vuela = true;
+        objPersona2.edad = 33;
+        objPersona2.mostrarPersona();
+        objPersona2.puedeVolar();
+
 
     }
 }
