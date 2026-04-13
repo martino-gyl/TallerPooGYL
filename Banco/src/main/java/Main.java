@@ -14,7 +14,12 @@ public class Main {
         cuentaCorriente1.estadoDeCuenta();
         cuentaCorriente2.estadoDeCuenta();
 
-        cuentaCorriente1.imprimirDatosDeCuenta();
-        cuentaCorriente2.imprimirDatosDeCuenta();
+
+        // Visitor para generar reporte
+        ReporteDeCuentaVisitor reporteDeCuentaVisitor = new ReporteDeCuentaVisitor();
+        cuentaCorriente1.aceptar(reporteDeCuentaVisitor);
+        cuentaCorriente2.aceptar(reporteDeCuentaVisitor);
+
+
     }
 }

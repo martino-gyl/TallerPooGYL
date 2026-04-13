@@ -1,4 +1,4 @@
 public interface CuentaVisitor {
-    void visitarCajaDeAhorro(Cuenta unaCuenta);
-    void visitarCuentaCorriente(Cuenta unaCuenta);
+    void visitarCajaDeAhorro(CajaDeAhorro unaCajaDeAhorro);
+    void visitarCuentaCorriente(CuentaCorriente unaCuentaCorriente);
 }

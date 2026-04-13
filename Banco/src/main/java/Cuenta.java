@@ -45,10 +45,9 @@ public abstract class Cuenta {
         System.out.println("Saldo: " + getSaldo());
     }
 
-    public void imprimirDatosDeCuenta(){
-        System.out.println("Cuenta de tipo: "+this.getTipoDeCuenta());
-        System.out.println("Saldo: " + this.getSaldo());
-        this.cliente.imprimirDatosDelCliente();
+
+    public Cliente getCliente(){
+        return this.cliente;
     }
 
     public abstract void aceptar(CuentaVisitor unVisitor);

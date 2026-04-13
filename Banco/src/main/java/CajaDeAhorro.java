@@ -13,5 +13,6 @@ public class CajaDeAhorro extends Cuenta{
 
     @Override
     public void aceptar(CuentaVisitor unVisitor){
+        unVisitor.visitarCajaDeAhorro(this);
     }
 }

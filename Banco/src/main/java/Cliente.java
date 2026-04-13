@@ -13,11 +13,14 @@ public class Cliente {
         return this.DNI.equals(unClient.DNI) && this.nombre.equals(unClient.nombre);
     }
 
-    public void imprimirDatosDelCliente(){
-        System.out.println("Datos del cliente \n" +
-                "Nombre: " + this.nombre + "\n" +
-                "Domicilio: " + this.domicilio + "\n" +
-                "DNI: "+ this.DNI + "\n");
+    public String getNombre(){
+        return this.nombre;
+    }
+    public String getDomicilio(){
+        return this.domicilio;
+    }
+    public String getDNI(){
+        return this.DNI;
     }
 
 }

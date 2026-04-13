@@ -28,5 +28,6 @@ public class CuentaCorriente extends Cuenta{
 
     @Override
     public void aceptar(CuentaVisitor unVisitor){
+        unVisitor.visitarCuentaCorriente(this);
     }
 }
