@@ -8,6 +8,10 @@ public class CajaDeAhorro extends Cuenta{
 
     @Override
     public TipoDeCuenta getTipoDeCuenta(){
-        return TipoDeCuenta.CUENTA_CORRIENTE;
+        return TipoDeCuenta.CAJA_DE_AHORRO;
+    }
+
+    @Override
+    public void aceptar(CuentaVisitor unVisitor){
     }
 }

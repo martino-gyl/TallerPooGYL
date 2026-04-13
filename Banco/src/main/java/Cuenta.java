@@ -50,6 +50,8 @@ public abstract class Cuenta {
         System.out.println("Saldo: " + this.getSaldo());
         this.cliente.imprimirDatosDelCliente();
     }
+
+    public abstract void aceptar(CuentaVisitor unVisitor);
 }
 
 
