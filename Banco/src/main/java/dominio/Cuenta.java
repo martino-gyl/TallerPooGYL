@@ -1,3 +1,5 @@
+package dominio;
+
 public abstract class Cuenta {
     int saldo;
     private Cliente cliente;

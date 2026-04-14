@@ -1,3 +1,5 @@
+package dominio;
+
 public class Banco {
     public void transferir(Cuenta cuentaOrigen, Cuenta cuentaDestino, int unMonto){
         if (cuentaOrigen == null || cuentaDestino == null){

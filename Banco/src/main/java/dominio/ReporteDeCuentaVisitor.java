@@ -1,3 +1,5 @@
+package dominio;
+
 public class ReporteDeCuentaVisitor implements CuentaVisitor {
     @Override
     public void visitarCajaDeAhorro(CajaDeAhorro unaCajaDeAhorro) {
@@ -6,7 +8,7 @@ public class ReporteDeCuentaVisitor implements CuentaVisitor {
     }
 
     public void visitarCuentaCorriente(CuentaCorriente unaCuentaCorriente) {
-        System.out.println("--Cuenta Corriente--");
+        System.out.println("--dominio.Cuenta Corriente--");
         this.reporteGeneralDeCuenta(unaCuentaCorriente);
     }
 

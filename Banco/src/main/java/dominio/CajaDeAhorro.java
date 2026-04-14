@@ -1,3 +1,5 @@
+package dominio;
+
 public class CajaDeAhorro extends Cuenta{
 
     public String tipoDeCuenta = "Caja de Ahorro";
