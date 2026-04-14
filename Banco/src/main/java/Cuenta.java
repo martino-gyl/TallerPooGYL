@@ -31,7 +31,7 @@ public abstract class Cuenta {
         this.saldo += unMonto;
     }
 
-    private boolean esLaMismaCuenta(Cuenta unaCuenta){
+    public boolean esLaMismaCuenta(Cuenta unaCuenta){
         return cliente.esElMismoCliente(unaCuenta.cliente) && this.getTipoDeCuenta() == unaCuenta.getTipoDeCuenta();
     }
 
@@ -39,10 +39,6 @@ public abstract class Cuenta {
 
     public int getSaldo() {
         return saldo;
-    }
-
-    public void estadoDeCuenta(){
-        System.out.println("Saldo: " + getSaldo());
     }
 
 

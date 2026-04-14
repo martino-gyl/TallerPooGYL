@@ -1,5 +1,7 @@
 public class Main {
     static void main() {
+        Banco banco = new Banco();
+
         // Cuenta Corriente 1
         Cliente cliente1 = new Cliente("Martino","1111","Calle 1");
         Cuenta cuentaCorriente1 = new CuentaCorriente(cliente1,100000);
@@ -10,15 +12,14 @@ public class Main {
         cuentaCorriente2.acreditar(60000);
 
         // transferencia entre cuentaCorriente1 a cuentaCorriente2
-        cuentaCorriente1.transferirA(cuentaCorriente2,20000);
-        cuentaCorriente1.estadoDeCuenta();
-        cuentaCorriente2.estadoDeCuenta();
-
+        banco.transferir(cuentaCorriente1,cuentaCorriente2,20000);
+        //cuentaCorriente1.transferirA(cuentaCorriente2,20000);
 
         // Visitor para generar reporte
         ReporteDeCuentaVisitor reporteDeCuentaVisitor = new ReporteDeCuentaVisitor();
         cuentaCorriente1.aceptar(reporteDeCuentaVisitor);
         cuentaCorriente2.aceptar(reporteDeCuentaVisitor);
+
 
 
     }
