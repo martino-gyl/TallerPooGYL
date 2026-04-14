@@ -1,14 +1,109 @@
 package dominio;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Banco {
-    public void transferir(Cuenta cuentaOrigen, Cuenta cuentaDestino, int unMonto){
-        if (cuentaOrigen == null || cuentaDestino == null){
-            throw new IllegalArgumentException("Las cuentas no pueden ser null");
-        } else if (cuentaOrigen.esLaMismaCuenta(cuentaDestino)) {
-            throw new IllegalArgumentException("ERROR: no se puede transferir a la misma cuenta");
-        } else {
-            cuentaOrigen.debitar(unMonto);
-            cuentaDestino.acreditar(unMonto);
+    private String nombre;
+    private List<Sucursal> sucursales;
+
+    public Banco(String nombre) {
+        this.nombre = nombre;
+        this.sucursales = new ArrayList<>();
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public List<Sucursal> getSucursales() {
+        return sucursales;
+    }
+
+    public void agregarSucursal(Sucursal sucursal) {
+        if (buscarSucursalPorCodigo(sucursal.getCodigo()) != null) {
+            throw new IllegalArgumentException("Ya existe una sucursal con ese código");
         }
+        sucursales.add(sucursal);
+    }
+
+    public Sucursal buscarSucursalPorCodigo(String codigo) {
+        for (Sucursal sucursal : sucursales) {
+            if (sucursal.getCodigo().equals(codigo)) {
+                return sucursal;
+            }
+        }
+        return null;
+    }
+
+    public void asignarAdminASucursal(String codigoSucursal, Admin admin) {
+        Sucursal sucursal = buscarSucursalPorCodigo(codigoSucursal);
+
+        if (sucursal == null) {
+            throw new IllegalArgumentException("Sucursal inexistente");
+        }
+
+        sucursal.setAdmin(admin);
+    }
+
+    public double calcularBalanceTotal() {
+        double total = 0;
+        for (Sucursal sucursal : sucursales) {
+            total += sucursal.calcularBalanceSucursal();
+        }
+        return total;
+    }
+
+    public Cuenta buscarCuentaPorNumero(String numero) {
+        for (Sucursal sucursal : sucursales) {
+            Cuenta cuenta = sucursal.buscarCuentaPorNumero(numero);
+            if (cuenta != null) {
+                return cuenta;
+            }
+        }
+        return null;
+    }
+
+    public Cuenta autenticarCuenta(String numero, String password) {
+        Cuenta cuenta = buscarCuentaPorNumero(numero);
+
+        if (cuenta != null && cuenta.validarPassword(password)) {
+            return cuenta;
+        }
+
+        return null;
+    }
+
+    public Admin autenticarAdmin(String codigoSucursal, String usuario, String password) {
+        Sucursal sucursal = buscarSucursalPorCodigo(codigoSucursal);
+
+        if (sucursal == null || sucursal.getAdmin() == null) {
+            return null;
+        }
+
+        Admin admin = sucursal.getAdmin();
+
+        if (admin.getUsuario().equals(usuario) && admin.validarPassword(password)) {
+            return admin;
+        }
+
+        return null;
+    }
+
+    public void transferir(Cuenta origen, Cuenta destino, double monto) {
+        if (origen == null || destino == null) {
+            throw new IllegalArgumentException("Cuenta inexistente");
+        }
+
+        if (origen == destino) {
+            throw new IllegalArgumentException("No se puede transferir a la misma cuenta");
+        }
+
+        if (monto <= 0) {
+            throw new IllegalArgumentException("El monto debe ser positivo");
+        }
+
+        origen.extraer(monto);
+        destino.depositar(monto);
     }
 }

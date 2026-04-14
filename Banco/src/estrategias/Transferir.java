@@ -3,7 +3,7 @@ package estrategias;
 import dominio.Banco;
 import dominio.Cuenta;
 
-public class Transferir implements TransaccionStrategy{
+public class Transferir implements OperacionStrategy{
     @Override
     public void ejecutar(Banco banco, int idCuentaOrigen, int idCuentaDestino, double monto) {
         Cuenta cuentaOrigen = banco.obtenerCuentaPorID(idCuentaOrigen);

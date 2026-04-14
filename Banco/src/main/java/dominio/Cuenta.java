@@ -1,54 +1,114 @@
 package dominio;
 
-public abstract class Cuenta {
-    int saldo;
-    private Cliente cliente;
+public class Cuenta {
+    private String numero;
+    private String password;
+    private Sucursal sucursal;
+    private double saldo;
+    private TipoCuenta tipo;
 
-    // las cuentas inician con saldo 0
-    public Cuenta(Cliente unCliente){
-        this.cliente = unCliente;
+    // Datos del titular dentro de la cuenta
+    private String dni;
+    private String nombre;
+    private String apellido;
+    private String email;
+    private String direccion;
+
+    public Cuenta(
+            String numero,
+            String password,
+            Sucursal sucursal,
+            TipoCuenta tipo,
+            String dni,
+            String nombre,
+            String apellido,
+            String email,
+            String direccion
+    ) {
+        this.numero = numero;
+        this.password = password;
+        this.sucursal = sucursal;
+        this.tipo = tipo;
         this.saldo = 0;
+
+        this.dni = dni;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.email = email;
+        this.direccion = direccion;
     }
 
-    public void transferirA(Cuenta unaCuenta, int unMonto){
-        if (this.esLaMismaCuenta(unaCuenta)) {
-            throw new IllegalArgumentException("ERROR: no se puede transferir a la misma cuenta");
-        } else {
-            this.debitar(unMonto);
-            unaCuenta.acreditar(unMonto);
-        }
+    public String getNumero() {
+        return numero;
     }
 
-    public void debitar(int unMonto){
-        if (unMonto <= 0) {
-            throw new IllegalArgumentException("ERROR: no se puede debitar un monto menor o igual a cero");
-        }
-        this.saldo -= unMonto;
+    public String getPassword() {
+        return password;
     }
 
-    public void acreditar(int unMonto){
-        if (unMonto <= 0) {
-            throw new IllegalArgumentException("ERROR: no se puede acreditar un monto menor o igual a cero");
-        }
-        this.saldo += unMonto;
+    public Sucursal getSucursal() {
+        return sucursal;
     }
 
-    public boolean esLaMismaCuenta(Cuenta unaCuenta){
-        return cliente.esElMismoCliente(unaCuenta.cliente) && this.getTipoDeCuenta() == unaCuenta.getTipoDeCuenta();
-    }
-
-    public abstract TipoDeCuenta getTipoDeCuenta();
-
-    public int getSaldo() {
+    public double getSaldo() {
         return saldo;
     }
 
-
-    public Cliente getCliente(){
-        return this.cliente;
+    public TipoCuenta getTipo() {
+        return tipo;
     }
 
-    public abstract void aceptar(CuentaVisitor unVisitor);
+    public String getDni() {
+        return dni;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public String getApellido() {
+        return apellido;
+    }
+
+    public String getNombreCompleto() {
+        return nombre + " " + apellido;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public boolean validarPassword(String password) {
+        return this.password.equals(password);
+    }
+
+    public void depositar(double monto) {
+        if (monto <= 0) {
+            throw new IllegalArgumentException("El monto debe ser positivo");
+        }
+        saldo += monto;
+    }
+
+    public void extraer(double monto) {
+        if (monto <= 0) {
+            throw new IllegalArgumentException("El monto debe ser positivo");
+        }
+
+        if (monto > saldo) {
+            throw new IllegalArgumentException("Saldo insuficiente");
+        }
+
+        saldo -= monto;
+    }
+
+    public void sumarSaldo(double monto) {
+        if (monto <= 0) {
+            throw new IllegalArgumentException("El monto debe ser positivo");
+        }
+        this.saldo += monto;
+    }
 }
-
-
