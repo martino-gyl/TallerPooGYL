@@ -2,8 +2,6 @@ package dominio;
 
 import java.util.List;
 
-import java.util.List;
-
 public class AplicacionBanco {
     private final Banco banco;
 

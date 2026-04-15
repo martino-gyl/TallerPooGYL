@@ -104,11 +104,4 @@ public class Cuenta {
 
         saldo -= monto;
     }
-
-    public void sumarSaldo(double monto) {
-        if (monto <= 0) {
-            throw new IllegalArgumentException("El monto debe ser positivo");
-        }
-        this.saldo += monto;
-    }
 }

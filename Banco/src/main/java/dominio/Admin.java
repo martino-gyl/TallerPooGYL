@@ -122,6 +122,6 @@ public class Admin {
         }
 
         origen.extraer(monto);
-        destino.sumarSaldo(monto);
+        destino.depositar(monto);
     }
 }
