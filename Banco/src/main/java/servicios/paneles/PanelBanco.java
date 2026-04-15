@@ -1,19 +1,19 @@
-package servicios;
+package servicios.paneles;
 
 import dominio.Sucursal;
+import servicios.AplicacionBanco;
 
 import java.util.List;
 import java.util.Scanner;
 
-public class PanelBanco {
-    private final Scanner scanner;
-    private final AplicacionBanco aplicacion;
+
+public class PanelBanco extends Panel {
 
     public PanelBanco(Scanner scanner, AplicacionBanco aplicacion) {
-        this.scanner = scanner;
-        this.aplicacion = aplicacion;
+        super(scanner, aplicacion);
     }
 
+    @Override
     public void mostrar() {
         boolean volver = false;
 
@@ -34,7 +34,7 @@ public class PanelBanco {
                     case 1 -> listarSucursales();
                     case 2 -> crearSucursal();
                     case 3 -> asignarAdmin();
-                    case 4 -> System.out.println("Balance total del banco: $" + aplicacion.balanceBanco());
+                    case 4 -> System.out.println("Balance total del banco: $" + getAplicacion().balanceBanco());
                     case 5 -> verBalanceSucursal();
                     case 6 -> volver = true;
                     default -> System.out.println("Opción inválida.");
@@ -46,7 +46,7 @@ public class PanelBanco {
     }
 
     private void listarSucursales() {
-        List<Sucursal> sucursales = aplicacion.listarSucursales();
+        List<Sucursal> sucursales = getAplicacion().listarSucursales();
 
         if (sucursales.isEmpty()) {
             System.out.println("No hay sucursales registradas.");
@@ -78,7 +78,7 @@ public class PanelBanco {
         System.out.print("Dirección sucursal: ");
         String direccion = leerTexto();
 
-        aplicacion.crearSucursal(codigo, nombre, direccion);
+        getAplicacion().crearSucursal(codigo, nombre, direccion);
         System.out.println("Sucursal creada correctamente.");
     }
 
@@ -95,7 +95,7 @@ public class PanelBanco {
         System.out.print("Contraseña admin: ");
         String password = leerTexto();
 
-        aplicacion.asignarAdmin(codigo, nombre, usuario, password);
+        getAplicacion().asignarAdmin(codigo, nombre, usuario, password);
         System.out.println("Admin asignado correctamente.");
     }
 
@@ -103,15 +103,7 @@ public class PanelBanco {
         System.out.print("Código sucursal: ");
         String codigo = leerTexto();
 
-        double balance = aplicacion.balanceSucursal(codigo);
+        double balance = getAplicacion().balanceSucursal(codigo);
         System.out.println("Balance sucursal: $" + balance);
-    }
-
-    private int leerInt() {
-        return Integer.parseInt(scanner.nextLine());
-    }
-
-    private String leerTexto() {
-        return scanner.nextLine();
     }
 }

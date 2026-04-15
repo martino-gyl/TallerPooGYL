@@ -1,18 +1,18 @@
-package servicios;
+package servicios.paneles;
 
 import dominio.Cuenta;
+import servicios.AplicacionBanco;
 
 import java.util.Scanner;
 
-public class PanelCuenta {
-    private final Scanner scanner;
-    private final AplicacionBanco aplicacion;
+
+public class PanelCuenta extends Panel {
 
     public PanelCuenta(Scanner scanner, AplicacionBanco aplicacion) {
-        this.scanner = scanner;
-        this.aplicacion = aplicacion;
+        super(scanner, aplicacion);
     }
 
+    @Override
     public void mostrar() {
         Cuenta cuenta = loginCuenta();
         boolean volver = false;
@@ -33,7 +33,7 @@ public class PanelCuenta {
                     case 1 -> depositar(cuenta);
                     case 2 -> extraer(cuenta);
                     case 3 -> System.out.println("Saldo actual: $" + cuenta.getSaldo());
-                    case 4 -> System.out.println("\n" + aplicacion.resumenCuenta(cuenta));
+                    case 4 -> System.out.println("\n" + getAplicacion().resumenCuenta(cuenta));
                     case 5 -> volver = true;
                     default -> System.out.println("Opción inválida.");
                 }
@@ -51,14 +51,14 @@ public class PanelCuenta {
         System.out.print("Contraseña: ");
         String password = leerTexto();
 
-        return aplicacion.loginCuenta(numeroCuenta, password);
+        return getAplicacion().loginCuenta(numeroCuenta, password);
     }
 
     private void depositar(Cuenta cuenta) {
         System.out.print("Monto a depositar: ");
         double monto = leerDouble();
 
-        aplicacion.depositar(cuenta, monto);
+        getAplicacion().depositar(cuenta, monto);
         System.out.println("Depósito realizado.");
     }
 
@@ -66,19 +66,7 @@ public class PanelCuenta {
         System.out.print("Monto a extraer: ");
         double monto = leerDouble();
 
-        aplicacion.extraer(cuenta, monto);
+        getAplicacion().extraer(cuenta, monto);
         System.out.println("Extracción realizada.");
-    }
-
-    private int leerInt() {
-        return Integer.parseInt(scanner.nextLine());
-    }
-
-    private double leerDouble() {
-        return Double.parseDouble(scanner.nextLine());
-    }
-
-    private String leerTexto() {
-        return scanner.nextLine();
     }
 }

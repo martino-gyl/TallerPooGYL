@@ -1,21 +1,20 @@
-package servicios;
+package servicios.paneles;
 
 import dominio.Admin;
 import dominio.Cuenta;
 import dominio.TipoCuenta;
+import servicios.AplicacionBanco;
 
 import java.util.List;
 import java.util.Scanner;
 
-public class PanelAdmin {
-    private final Scanner scanner;
-    private final AplicacionBanco aplicacion;
+public class PanelAdmin extends Panel {
 
     public PanelAdmin(Scanner scanner, AplicacionBanco aplicacion) {
-        this.scanner = scanner;
-        this.aplicacion = aplicacion;
+        super(scanner, aplicacion);
     }
 
+    @Override
     public void mostrar() {
         Admin admin = loginAdmin();
         boolean volver = false;
@@ -38,7 +37,7 @@ public class PanelAdmin {
                     case 1 -> listarCuentas(admin);
                     case 2 -> crearCuenta(admin);
                     case 3 -> eliminarCuenta(admin);
-                    case 4 -> System.out.println("Balance sucursal: $" + aplicacion.balanceSucursal(admin));
+                    case 4 -> System.out.println("Balance sucursal: $" + getAplicacion().balanceSucursal(admin));
                     case 5 -> verBalanceCuenta();
                     case 6 -> transferir(admin);
                     case 7 -> volver = true;
@@ -61,11 +60,11 @@ public class PanelAdmin {
         System.out.print("Contraseña: ");
         String password = leerTexto();
 
-        return aplicacion.loginAdmin(codigoSucursal, usuario, password);
+        return getAplicacion().loginAdmin(codigoSucursal, usuario, password);
     }
 
     private void listarCuentas(Admin admin) {
-        List<Cuenta> cuentas = aplicacion.listarCuentas(admin);
+        List<Cuenta> cuentas = getAplicacion().listarCuentas(admin);
 
         if (cuentas.isEmpty()) {
             System.out.println("No hay cuentas en la sucursal.");
@@ -108,7 +107,7 @@ public class PanelAdmin {
 
         TipoCuenta tipo = leerTipoCuenta();
 
-        aplicacion.crearCuenta(
+        getAplicacion().crearCuenta(
                 admin,
                 numeroCuenta,
                 passwordCuenta,
@@ -127,7 +126,7 @@ public class PanelAdmin {
         System.out.print("Número de cuenta a eliminar: ");
         String numeroCuenta = leerTexto();
 
-        aplicacion.eliminarCuenta(admin, numeroCuenta);
+        getAplicacion().eliminarCuenta(admin, numeroCuenta);
         System.out.println("Cuenta eliminada correctamente.");
     }
 
@@ -141,7 +140,7 @@ public class PanelAdmin {
         System.out.print("Monto a transferir: ");
         double monto = leerDouble();
 
-        aplicacion.transferir(admin, numeroOrigen, numeroDestino, monto);
+        getAplicacion().transferir(admin, numeroOrigen, numeroDestino, monto);
         System.out.println("Transferencia realizada correctamente.");
     }
 
@@ -149,7 +148,7 @@ public class PanelAdmin {
         System.out.print("Número de cuenta: ");
         String numeroCuenta = leerTexto();
 
-        System.out.println("\n" + aplicacion.resumenCuenta(numeroCuenta));
+        System.out.println("\n" + getAplicacion().resumenCuenta(numeroCuenta));
     }
 
     private TipoCuenta leerTipoCuenta() {
@@ -168,17 +167,5 @@ public class PanelAdmin {
         }
 
         throw new IllegalArgumentException("Tipo de cuenta inválido.");
-    }
-
-    private int leerInt() {
-        return Integer.parseInt(scanner.nextLine());
-    }
-
-    private double leerDouble() {
-        return Double.parseDouble(scanner.nextLine());
-    }
-
-    private String leerTexto() {
-        return scanner.nextLine();
     }
 }
