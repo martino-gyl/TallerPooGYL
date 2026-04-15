@@ -1,5 +1,9 @@
 package dominio;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class Cuenta {
     private String numero;
     private String password;
@@ -7,12 +11,13 @@ public class Cuenta {
     private double saldo;
     private TipoCuenta tipo;
 
-    // Datos del titular dentro de la cuenta
     private String dni;
     private String nombre;
     private String apellido;
     private String email;
     private String direccion;
+
+    private List<Movimiento> movimientos;
 
     public Cuenta(
             String numero,
@@ -30,28 +35,16 @@ public class Cuenta {
         this.sucursal = sucursal;
         this.tipo = tipo;
         this.saldo = 0;
-
         this.dni = dni;
         this.nombre = nombre;
         this.apellido = apellido;
         this.email = email;
         this.direccion = direccion;
+        this.movimientos = new ArrayList<>();
     }
 
     public String getNumero() {
         return numero;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public Sucursal getSucursal() {
-        return sucursal;
-    }
-
-    public double getSaldo() {
-        return saldo;
     }
 
     public TipoCuenta getTipo() {
@@ -60,14 +53,6 @@ public class Cuenta {
 
     public String getDni() {
         return dni;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public String getApellido() {
-        return apellido;
     }
 
     public String getNombreCompleto() {
@@ -82,26 +67,50 @@ public class Cuenta {
         return direccion;
     }
 
+    public double getSaldo() {
+        return saldo;
+    }
+
+    public Sucursal getSucursal() {
+        return sucursal;
+    }
+
     public boolean validarPassword(String password) {
         return this.password.equals(password);
     }
 
     public void depositar(double monto) {
+        sumarSaldo(monto);
+        registrarMovimiento(TipoMovimiento.DEPOSITO, monto, "Depósito en cuenta");
+    }
+
+    public void extraer(double monto) {
+        if (monto > saldo) {
+            throw new IllegalArgumentException("Saldo insuficiente");
+        }
+        restarSaldo(monto);
+        registrarMovimiento(TipoMovimiento.EXTRACCION, monto, "Extracción de cuenta");
+    }
+
+    public void sumarSaldo(double monto) {
         if (monto <= 0) {
             throw new IllegalArgumentException("El monto debe ser positivo");
         }
         saldo += monto;
     }
 
-    public void extraer(double monto) {
+    public void restarSaldo(double monto) {
         if (monto <= 0) {
             throw new IllegalArgumentException("El monto debe ser positivo");
         }
-
-        if (monto > saldo) {
-            throw new IllegalArgumentException("Saldo insuficiente");
-        }
-
         saldo -= monto;
+    }
+
+    public void registrarMovimiento(TipoMovimiento tipo, double monto, String detalle) {
+        movimientos.add(new Movimiento(tipo, monto, detalle));
+    }
+
+    public List<Movimiento> getMovimientos() {
+        return Collections.unmodifiableList(movimientos);
     }
 }

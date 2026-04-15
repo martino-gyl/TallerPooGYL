@@ -121,7 +121,19 @@ public class Admin {
             throw new IllegalArgumentException("El monto debe ser positivo");
         }
 
-        origen.extraer(monto);
-        destino.depositar(monto);
+        origen.restarSaldo(monto);
+        destino.sumarSaldo(monto);
+
+        origen.registrarMovimiento(
+                TipoMovimiento.TRANSFERENCIA_ENVIADA,
+                monto,
+                "Transferencia a cuenta " + destino.getNumero()
+        );
+
+        destino.registrarMovimiento(
+                TipoMovimiento.TRANSFERENCIA_RECIBIDA,
+                monto,
+                "Transferencia desde cuenta " + origen.getNumero()
+        );
     }
 }
