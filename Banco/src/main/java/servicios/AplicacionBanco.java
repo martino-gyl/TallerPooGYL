@@ -132,4 +132,29 @@ public class AplicacionBanco {
     public String resumenCuenta(String numeroCuenta) {
         return resumenCuenta(buscarCuenta(numeroCuenta));
     }
+
+    public String movimientosCuenta(String numeroCuenta) {
+        Cuenta cuenta = buscarCuenta(numeroCuenta);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("=== MOVIMIENTOS ===\n");
+
+        if (cuenta.getMovimientos().isEmpty()) {
+            sb.append("La cuenta no tiene movimientos.");
+            return sb.toString();
+        }
+
+        for (Movimiento movimiento : cuenta.getMovimientos()) {
+            sb.append(movimiento.getFecha())
+                    .append(" | ")
+                    .append(movimiento.getTipo())
+                    .append(" | $")
+                    .append(movimiento.getMonto())
+                    .append(" | ")
+                    .append(movimiento.getDetalle())
+                    .append("\n");
+        }
+
+        return sb.toString();
+    }
 }

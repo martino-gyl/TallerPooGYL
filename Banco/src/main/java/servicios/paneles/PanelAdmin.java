@@ -27,8 +27,9 @@ public class PanelAdmin extends Panel {
                 System.out.println("3. Eliminar cuenta");
                 System.out.println("4. Ver balance de la sucursal");
                 System.out.println("5. Ver balance de una cuenta");
-                System.out.println("6. Transferir entre cuentas de la sucursal");
-                System.out.println("7. Volver");
+                System.out.println("6. Ver movimientos de una cuenta");
+                System.out.println("7. Transferir entre cuentas de la sucursal");
+                System.out.println("8. Volver");
                 System.out.print("Opción: ");
 
                 int opcion = leerInt();
@@ -39,12 +40,13 @@ public class PanelAdmin extends Panel {
                     case 3 -> eliminarCuenta(admin);
                     case 4 -> System.out.println("Balance sucursal: $" + getAplicacion().balanceSucursal(admin));
                     case 5 -> verBalanceCuenta();
-                    case 6 -> transferir(admin);
-                    case 7 -> volver = true;
+                    case 6 -> verMovimientosCuenta();
+                    case 7 -> transferir(admin);
+                    case 8 -> volver = true;
                     default -> System.out.println("Opción inválida.");
                 }
             } catch (IllegalArgumentException e) {
-                System.out.println("Error: " + e.getMessage());
+                mostrarError(e);
             }
         }
     }
@@ -149,6 +151,13 @@ public class PanelAdmin extends Panel {
         String numeroCuenta = leerTexto();
 
         System.out.println("\n" + getAplicacion().resumenCuenta(numeroCuenta));
+    }
+
+    private void verMovimientosCuenta() {
+        System.out.print("Número de cuenta: ");
+        String numeroCuenta = leerTexto();
+
+        System.out.println("\n" + getAplicacion().movimientosCuenta(numeroCuenta));
     }
 
     private TipoCuenta leerTipoCuenta() {

@@ -38,4 +38,8 @@ public abstract class Panel {
     protected AplicacionBanco getAplicacion() {
         return aplicacion;
     }
+
+    protected void mostrarError(Exception e) {
+        System.out.println("Error: " + e.getMessage());
+    }
 }

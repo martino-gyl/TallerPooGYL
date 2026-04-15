@@ -5,7 +5,6 @@ import servicios.AplicacionBanco;
 
 import java.util.Scanner;
 
-
 public class PanelCuenta extends Panel {
 
     public PanelCuenta(Scanner scanner, AplicacionBanco aplicacion) {
@@ -24,7 +23,8 @@ public class PanelCuenta extends Panel {
                 System.out.println("2. Extraer");
                 System.out.println("3. Ver saldo");
                 System.out.println("4. Ver balance");
-                System.out.println("5. Volver");
+                System.out.println("5. Ver movimientos");
+                System.out.println("6. Volver");
                 System.out.print("Opción: ");
 
                 int opcion = leerInt();
@@ -34,11 +34,12 @@ public class PanelCuenta extends Panel {
                     case 2 -> extraer(cuenta);
                     case 3 -> System.out.println("Saldo actual: $" + cuenta.getSaldo());
                     case 4 -> System.out.println("\n" + getAplicacion().resumenCuenta(cuenta));
-                    case 5 -> volver = true;
+                    case 5 -> System.out.println("\n" + getAplicacion().movimientosCuenta(cuenta.getNumero()));
+                    case 6 -> volver = true;
                     default -> System.out.println("Opción inválida.");
                 }
             } catch (IllegalArgumentException e) {
-                System.out.println("Error: " + e.getMessage());
+                mostrarError(e);
             }
         }
     }
