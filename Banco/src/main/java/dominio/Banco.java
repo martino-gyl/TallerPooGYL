@@ -3,6 +3,9 @@ package dominio;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Banco {
     private String nombre;
     private List<Sucursal> sucursales;
@@ -64,6 +67,10 @@ public class Banco {
         return null;
     }
 
+    public Cuenta obtenerCuentaPorId(String idCuenta) {
+        return buscarCuentaPorNumero(idCuenta);
+    }
+
     public Cuenta autenticarCuenta(String numero, String password) {
         Cuenta cuenta = buscarCuentaPorNumero(numero);
 
@@ -88,22 +95,5 @@ public class Banco {
         }
 
         return null;
-    }
-
-    public void transferir(Cuenta origen, Cuenta destino, double monto) {
-        if (origen == null || destino == null) {
-            throw new IllegalArgumentException("Cuenta inexistente");
-        }
-
-        if (origen == destino) {
-            throw new IllegalArgumentException("No se puede transferir a la misma cuenta");
-        }
-
-        if (monto <= 0) {
-            throw new IllegalArgumentException("El monto debe ser positivo");
-        }
-
-        origen.extraer(monto);
-        destino.depositar(monto);
     }
 }

@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 public class Sucursal {
     private String codigo;
     private String nombre;
@@ -36,6 +40,9 @@ public class Sucursal {
 
     public void setAdmin(Admin admin) {
         this.admin = admin;
+        if (admin != null) {
+            admin.asignarSucursal(this);
+        }
     }
 
     public List<Cuenta> getCuentas() {
@@ -70,13 +77,20 @@ public class Sucursal {
         return null;
     }
 
+    public Cuenta buscarCuentaPorDni(String dni) {
+        for (Cuenta cuenta : cuentas) {
+            if (cuenta.getDni().equals(dni)) {
+                return cuenta;
+            }
+        }
+        return null;
+    }
+
     public double calcularBalanceSucursal() {
         double total = 0;
-
         for (Cuenta cuenta : cuentas) {
             total += cuenta.getSaldo();
         }
-
         return total;
     }
 }
