@@ -1,26 +1,19 @@
+import dominio.*;
+
 public class Main {
-    static void main() {
-        Banco banco = new Banco();
+    public static void main(String[] args) {
+        Banco banco = new Banco("Banco Dino");
 
-        // Cuenta Corriente 1
-        Cliente cliente1 = new Cliente("Martino","1111","Calle 1");
-        Cuenta cuentaCorriente1 = new CuentaCorriente(cliente1,100000);
-        cuentaCorriente1.acreditar(50000);
-        // Cuenta Corriente 2
-        Cliente cliente2 = new Cliente("Simon","2222","Calle 2");
-        Cuenta cuentaCorriente2 = new CuentaCorriente(cliente2,100000);
-        cuentaCorriente2.acreditar(60000);
+        Sucursal sucursal1 = new Sucursal("001", "Casa Central", "Av. Siempre Viva 123");
+        Sucursal sucursal2 = new Sucursal("002", "Sucursal Norte", "Calle Norte 456");
 
-        // transferencia entre cuentaCorriente1 a cuentaCorriente2
-        banco.transferir(cuentaCorriente1,cuentaCorriente2,20000);
-        //cuentaCorriente1.transferirA(cuentaCorriente2,20000);
+        banco.agregarSucursal(sucursal1);
+        banco.agregarSucursal(sucursal2);
 
-        // Visitor para generar reporte
-        ReporteDeCuentaVisitor reporteDeCuentaVisitor = new ReporteDeCuentaVisitor();
-        cuentaCorriente1.aceptar(reporteDeCuentaVisitor);
-        cuentaCorriente2.aceptar(reporteDeCuentaVisitor);
+        Admin admin1 = new Admin("Laura", "admin1", "1234");
+        banco.asignarAdminASucursal("001", admin1);
 
-
-
+        MenuBancario menu = new MenuBancario(banco);
+        menu.iniciar();
     }
 }
