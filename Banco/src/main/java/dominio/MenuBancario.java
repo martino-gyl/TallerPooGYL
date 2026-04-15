@@ -19,19 +19,13 @@ public class MenuBancario {
 
         while (!salir) {
             try {
-                System.out.println("\n--- MENÚ PRINCIPAL ---");
-                System.out.println("1. Panel Banco");
-                System.out.println("2. Panel Admin de Sucursal");
-                System.out.println("3. Panel Cuenta");
-                System.out.println("4. Salir");
-                System.out.print("Opción: ");
-
+                mostrarMenuPrincipal();
                 int opcion = leerInt();
 
                 switch (opcion) {
-                    case 1 -> menuBanco();
-                    case 2 -> menuLoginAdmin();
-                    case 3 -> menuLoginCuenta();
+                    case 1 -> panelBanco();
+                    case 2 -> panelAdmin();
+                    case 3 -> panelCuenta();
                     case 4 -> {
                         salir = true;
                         System.out.println("Hasta luego.");
@@ -48,7 +42,16 @@ public class MenuBancario {
         scanner.close();
     }
 
-    private void menuBanco() {
+    private void mostrarMenuPrincipal() {
+        System.out.println("\n--- MENÚ PRINCIPAL ---");
+        System.out.println("1. Panel Banco");
+        System.out.println("2. Panel Admin de Sucursal");
+        System.out.println("3. Panel Cuenta");
+        System.out.println("4. Salir");
+        System.out.print("Opción: ");
+    }
+
+    private void panelBanco() {
         boolean volver = false;
 
         while (!volver) {
@@ -65,11 +68,11 @@ public class MenuBancario {
                 int opcion = leerInt();
 
                 switch (opcion) {
-                    case 1 -> listarSucursales();
-                    case 2 -> crearSucursal();
-                    case 3 -> asignarAdminASucursal();
-                    case 4 -> verBalanceTotalBanco();
-                    case 5 -> verBalanceSucursal();
+                    case 1 -> System.out.println("\n" + aplicacion.listarSucursalesTexto());
+                    case 2 -> accionCrearSucursal();
+                    case 3 -> accionAsignarAdmin();
+                    case 4 -> System.out.println(aplicacion.balanceBancoTexto());
+                    case 5 -> accionBalanceSucursal();
                     case 6 -> volver = true;
                     default -> System.out.println("Opción inválida.");
                 }
@@ -79,22 +82,8 @@ public class MenuBancario {
         }
     }
 
-    private void menuLoginAdmin() {
-        System.out.println("\n--- LOGIN ADMIN ---");
-        System.out.print("Código de sucursal: ");
-        String codigoSucursal = leerTexto();
-
-        System.out.print("Usuario: ");
-        String usuario = leerTexto();
-
-        System.out.print("Contraseña: ");
-        String password = leerTexto();
-
-        Admin admin = aplicacion.loginAdmin(codigoSucursal, usuario, password);
-        menuAdminSucursal(admin);
-    }
-
-    private void menuAdminSucursal(Admin admin) {
+    private void panelAdmin() {
+        Admin admin = loginAdmin();
         boolean volver = false;
 
         while (!volver) {
@@ -112,12 +101,12 @@ public class MenuBancario {
                 int opcion = leerInt();
 
                 switch (opcion) {
-                    case 1 -> listarCuentasDeAdmin(admin);
-                    case 2 -> crearCuentaConAdmin(admin);
-                    case 3 -> eliminarCuentaConAdmin(admin);
-                    case 4 -> verBalanceSucursal(admin);
-                    case 5 -> verBalanceCuentaPorNumero();
-                    case 6 -> transferirConAdmin(admin);
+                    case 1 -> System.out.println("\n" + aplicacion.listarCuentasTexto(admin));
+                    case 2 -> accionCrearCuenta(admin);
+                    case 3 -> accionEliminarCuenta(admin);
+                    case 4 -> System.out.println(aplicacion.balanceSucursalTexto(admin));
+                    case 5 -> accionResumenCuentaPorNumero();
+                    case 6 -> accionTransferir(admin);
                     case 7 -> volver = true;
                     default -> System.out.println("Opción inválida.");
                 }
@@ -127,19 +116,8 @@ public class MenuBancario {
         }
     }
 
-    private void menuLoginCuenta() {
-        System.out.println("\n--- LOGIN CUENTA ---");
-        System.out.print("Número de cuenta: ");
-        String numeroCuenta = leerTexto();
-
-        System.out.print("Contraseña: ");
-        String password = leerTexto();
-
-        Cuenta cuenta = aplicacion.loginCuenta(numeroCuenta, password);
-        menuCuenta(cuenta);
-    }
-
-    private void menuCuenta(Cuenta cuenta) {
+    private void panelCuenta() {
+        Cuenta cuenta = loginCuenta();
         boolean volver = false;
 
         while (!volver) {
@@ -155,10 +133,10 @@ public class MenuBancario {
                 int opcion = leerInt();
 
                 switch (opcion) {
-                    case 1 -> depositar(cuenta);
-                    case 2 -> extraer(cuenta);
-                    case 3 -> System.out.println("Saldo actual: $" + cuenta.getSaldo());
-                    case 4 -> verBalanceCuenta(cuenta);
+                    case 1 -> accionDepositar(cuenta);
+                    case 2 -> accionExtraer(cuenta);
+                    case 3 -> System.out.println(aplicacion.saldoTexto(cuenta));
+                    case 4 -> System.out.println("\n" + aplicacion.resumenCuenta(cuenta));
                     case 5 -> volver = true;
                     default -> System.out.println("Opción inválida.");
                 }
@@ -168,30 +146,32 @@ public class MenuBancario {
         }
     }
 
-    private void listarSucursales() {
-        List<Sucursal> sucursales = aplicacion.listarSucursales();
+    private Admin loginAdmin() {
+        System.out.println("\n--- LOGIN ADMIN ---");
+        System.out.print("Código de sucursal: ");
+        String codigoSucursal = leerTexto();
 
-        if (sucursales.isEmpty()) {
-            System.out.println("No hay sucursales registradas.");
-            return;
-        }
+        System.out.print("Usuario: ");
+        String usuario = leerTexto();
 
-        System.out.println("\n--- SUCURSALES ---");
-        for (Sucursal sucursal : sucursales) {
-            String admin = (sucursal.getAdmin() == null)
-                    ? "Sin admin"
-                    : sucursal.getAdmin().getUsuario();
+        System.out.print("Contraseña: ");
+        String password = leerTexto();
 
-            System.out.println(
-                    "Código: " + sucursal.getCodigo() +
-                            " | Nombre: " + sucursal.getNombre() +
-                            " | Dirección: " + sucursal.getDireccion() +
-                            " | Admin: " + admin
-            );
-        }
+        return aplicacion.loginAdmin(codigoSucursal, usuario, password);
     }
 
-    private void crearSucursal() {
+    private Cuenta loginCuenta() {
+        System.out.println("\n--- LOGIN CUENTA ---");
+        System.out.print("Número de cuenta: ");
+        String numeroCuenta = leerTexto();
+
+        System.out.print("Contraseña: ");
+        String password = leerTexto();
+
+        return aplicacion.loginCuenta(numeroCuenta, password);
+    }
+
+    private void accionCrearSucursal() {
         System.out.print("Código sucursal: ");
         String codigo = leerTexto();
 
@@ -201,11 +181,10 @@ public class MenuBancario {
         System.out.print("Dirección sucursal: ");
         String direccion = leerTexto();
 
-        aplicacion.crearSucursal(codigo, nombre, direccion);
-        System.out.println("Sucursal creada correctamente.");
+        System.out.println(aplicacion.crearSucursal(codigo, nombre, direccion));
     }
 
-    private void asignarAdminASucursal() {
+    private void accionAsignarAdmin() {
         System.out.print("Código sucursal: ");
         String codigo = leerTexto();
 
@@ -218,48 +197,17 @@ public class MenuBancario {
         System.out.print("Contraseña admin: ");
         String password = leerTexto();
 
-        aplicacion.asignarAdmin(codigo, nombre, usuario, password);
-        System.out.println("Admin asignado correctamente.");
+        System.out.println(aplicacion.asignarAdmin(codigo, nombre, usuario, password));
     }
 
-    private void verBalanceTotalBanco() {
-        System.out.println("Balance total del banco: $" + aplicacion.balanceBanco());
-    }
-
-    private void verBalanceSucursal() {
+    private void accionBalanceSucursal() {
         System.out.print("Código sucursal: ");
         String codigo = leerTexto();
 
-        double balance = aplicacion.balanceSucursal(codigo);
-        System.out.println("Balance sucursal: $" + balance);
+        System.out.println(aplicacion.balanceSucursalTexto(codigo));
     }
 
-    private void verBalanceSucursal(Admin admin) {
-        double balance = aplicacion.balanceSucursal(admin);
-        System.out.println("Balance sucursal: $" + balance);
-    }
-
-    private void listarCuentasDeAdmin(Admin admin) {
-        List<Cuenta> cuentas = aplicacion.listarCuentas(admin);
-
-        if (cuentas.isEmpty()) {
-            System.out.println("No hay cuentas en la sucursal.");
-            return;
-        }
-
-        System.out.println("\n--- CUENTAS DE LA SUCURSAL ---");
-        for (Cuenta cuenta : cuentas) {
-            System.out.println(
-                    "Número: " + cuenta.getNumero() +
-                            " | Tipo: " + cuenta.getTipo() +
-                            " | Titular: " + cuenta.getNombreCompleto() +
-                            " | DNI: " + cuenta.getDni() +
-                            " | Saldo: $" + cuenta.getSaldo()
-            );
-        }
-    }
-
-    private void crearCuentaConAdmin(Admin admin) {
+    private void accionCrearCuenta(Admin admin) {
         System.out.print("DNI titular: ");
         String dni = leerTexto();
 
@@ -281,45 +229,31 @@ public class MenuBancario {
         System.out.print("Contraseña cuenta: ");
         String passwordCuenta = leerTexto();
 
-        System.out.println("Tipo de cuenta:");
-        System.out.println("1. Caja de ahorro");
-        System.out.println("2. Cuenta corriente");
-        System.out.print("Opción: ");
-        int opcionTipo = leerInt();
+        TipoCuenta tipo = leerTipoCuenta();
 
-        TipoCuenta tipo;
-        if (opcionTipo == 1) {
-            tipo = TipoCuenta.CAJA_DE_AHORRO;
-        } else if (opcionTipo == 2) {
-            tipo = TipoCuenta.CUENTA_CORRIENTE;
-        } else {
-            throw new IllegalArgumentException("Tipo de cuenta inválido.");
-        }
-
-        aplicacion.crearCuenta(
-                admin,
-                numeroCuenta,
-                passwordCuenta,
-                tipo,
-                dni,
-                nombre,
-                apellido,
-                email,
-                direccion
+        System.out.println(
+                aplicacion.crearCuenta(
+                        admin,
+                        numeroCuenta,
+                        passwordCuenta,
+                        tipo,
+                        dni,
+                        nombre,
+                        apellido,
+                        email,
+                        direccion
+                )
         );
-
-        System.out.println("Cuenta creada correctamente.");
     }
 
-    private void eliminarCuentaConAdmin(Admin admin) {
+    private void accionEliminarCuenta(Admin admin) {
         System.out.print("Número de cuenta a eliminar: ");
         String numeroCuenta = leerTexto();
 
-        aplicacion.eliminarCuenta(admin, numeroCuenta);
-        System.out.println("Cuenta eliminada correctamente.");
+        System.out.println(aplicacion.eliminarCuenta(admin, numeroCuenta));
     }
 
-    private void transferirConAdmin(Admin admin) {
+    private void accionTransferir(Admin admin) {
         System.out.print("Número de cuenta origen: ");
         String numeroOrigen = leerTexto();
 
@@ -329,37 +263,46 @@ public class MenuBancario {
         System.out.print("Monto a transferir: ");
         double monto = leerDouble();
 
-        aplicacion.transferir(admin, numeroOrigen, numeroDestino, monto);
-        System.out.println("Transferencia realizada correctamente.");
+        System.out.println(aplicacion.transferir(admin, numeroOrigen, numeroDestino, monto));
     }
 
-    private void depositar(Cuenta cuenta) {
+    private void accionDepositar(Cuenta cuenta) {
         System.out.print("Monto a depositar: ");
         double monto = leerDouble();
 
-        aplicacion.depositar(cuenta, monto);
-        System.out.println("Depósito realizado.");
+        System.out.println(aplicacion.depositar(cuenta, monto));
     }
 
-    private void extraer(Cuenta cuenta) {
+    private void accionExtraer(Cuenta cuenta) {
         System.out.print("Monto a extraer: ");
         double monto = leerDouble();
 
-        aplicacion.extraer(cuenta, monto);
-        System.out.println("Extracción realizada.");
+        System.out.println(aplicacion.extraer(cuenta, monto));
     }
 
-    private void verBalanceCuentaPorNumero() {
+    private void accionResumenCuentaPorNumero() {
         System.out.print("Número de cuenta: ");
         String numeroCuenta = leerTexto();
 
-        String resumen = aplicacion.resumenCuenta(numeroCuenta);
-        System.out.println("\n" + resumen);
+        System.out.println("\n" + aplicacion.resumenCuenta(numeroCuenta));
     }
 
-    private void verBalanceCuenta(Cuenta cuenta) {
-        String resumen = aplicacion.resumenCuenta(cuenta);
-        System.out.println("\n" + resumen);
+    private TipoCuenta leerTipoCuenta() {
+        System.out.println("Tipo de cuenta:");
+        System.out.println("1. Caja de ahorro");
+        System.out.println("2. Cuenta corriente");
+        System.out.print("Opción: ");
+
+        int opcionTipo = leerInt();
+
+        if (opcionTipo == 1) {
+            return TipoCuenta.CAJA_DE_AHORRO;
+        }
+        if (opcionTipo == 2) {
+            return TipoCuenta.CUENTA_CORRIENTE;
+        }
+
+        throw new IllegalArgumentException("Tipo de cuenta inválido.");
     }
 
     private int leerInt() {

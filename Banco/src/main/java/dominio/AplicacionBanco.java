@@ -2,25 +2,13 @@ package dominio;
 
 import java.util.List;
 
+import java.util.List;
+
 public class AplicacionBanco {
-    private Banco banco;
+    private final Banco banco;
 
     public AplicacionBanco(Banco banco) {
         this.banco = banco;
-    }
-
-    public List<Sucursal> listarSucursales() {
-        return banco.getSucursales();
-    }
-
-    public void crearSucursal(String codigo, String nombre, String direccion) {
-        Sucursal sucursal = new Sucursal(codigo, nombre, direccion);
-        banco.agregarSucursal(sucursal);
-    }
-
-    public void asignarAdmin(String codigoSucursal, String nombreAdmin, String usuarioAdmin, String passwordAdmin) {
-        Admin admin = new Admin(nombreAdmin, usuarioAdmin, passwordAdmin);
-        banco.asignarAdminASucursal(codigoSucursal, admin);
     }
 
     public Admin loginAdmin(String codigoSucursal, String usuario, String password) {
@@ -43,29 +31,85 @@ public class AplicacionBanco {
         return cuenta;
     }
 
-    public double balanceBanco() {
-        return banco.calcularBalanceTotal();
+    public String listarSucursalesTexto() {
+        List<Sucursal> sucursales = banco.getSucursales();
+
+        if (sucursales.isEmpty()) {
+            return "No hay sucursales registradas.";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("--- SUCURSALES ---\n");
+
+        for (Sucursal sucursal : sucursales) {
+            String admin = (sucursal.getAdmin() == null)
+                    ? "Sin admin"
+                    : sucursal.getAdmin().getUsuario();
+
+            sb.append("Código: ").append(sucursal.getCodigo())
+                    .append(" | Nombre: ").append(sucursal.getNombre())
+                    .append(" | Dirección: ").append(sucursal.getDireccion())
+                    .append(" | Admin: ").append(admin)
+                    .append("\n");
+        }
+
+        return sb.toString();
     }
 
-    public double balanceSucursal(String codigoSucursal) {
+    public String crearSucursal(String codigo, String nombre, String direccion) {
+        banco.agregarSucursal(new Sucursal(codigo, nombre, direccion));
+        return "Sucursal creada correctamente.";
+    }
+
+    public String asignarAdmin(String codigoSucursal, String nombreAdmin, String usuarioAdmin, String passwordAdmin) {
+        banco.asignarAdminASucursal(
+                codigoSucursal,
+                new Admin(nombreAdmin, usuarioAdmin, passwordAdmin)
+        );
+        return "Admin asignado correctamente.";
+    }
+
+    public String balanceBancoTexto() {
+        return "Balance total del banco: $" + banco.calcularBalanceTotal();
+    }
+
+    public String balanceSucursalTexto(String codigoSucursal) {
         Sucursal sucursal = banco.buscarSucursalPorCodigo(codigoSucursal);
 
         if (sucursal == null) {
             throw new IllegalArgumentException("Sucursal inexistente.");
         }
 
-        return sucursal.calcularBalanceSucursal();
+        return "Balance sucursal: $" + sucursal.calcularBalanceSucursal();
     }
 
-    public double balanceSucursal(Admin admin) {
-        return admin.verBalanceSucursal();
+    public String balanceSucursalTexto(Admin admin) {
+        return "Balance sucursal: $" + admin.verBalanceSucursal();
     }
 
-    public List<Cuenta> listarCuentas(Admin admin) {
-        return admin.listarCuentas();
+    public String listarCuentasTexto(Admin admin) {
+        List<Cuenta> cuentas = admin.listarCuentas();
+
+        if (cuentas.isEmpty()) {
+            return "No hay cuentas en la sucursal.";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("--- CUENTAS DE LA SUCURSAL ---\n");
+
+        for (Cuenta cuenta : cuentas) {
+            sb.append("Número: ").append(cuenta.getNumero())
+                    .append(" | Tipo: ").append(cuenta.getTipo())
+                    .append(" | Titular: ").append(cuenta.getNombreCompleto())
+                    .append(" | DNI: ").append(cuenta.getDni())
+                    .append(" | Saldo: $").append(cuenta.getSaldo())
+                    .append("\n");
+        }
+
+        return sb.toString();
     }
 
-    public void crearCuenta(
+    public String crearCuenta(
             Admin admin,
             String numeroCuenta,
             String passwordCuenta,
@@ -86,36 +130,41 @@ public class AplicacionBanco {
                 email,
                 direccion
         );
+
+        return "Cuenta creada correctamente.";
     }
 
-    public void eliminarCuenta(Admin admin, String numeroCuenta) {
+    public String eliminarCuenta(Admin admin, String numeroCuenta) {
         admin.darBajaCuenta(numeroCuenta);
+        return "Cuenta eliminada correctamente.";
     }
 
-    public void transferir(Admin admin, String numeroOrigen, String numeroDestino, double monto) {
+    public String transferir(Admin admin, String numeroOrigen, String numeroDestino, double monto) {
         admin.transferir(numeroOrigen, numeroDestino, monto);
+        return "Transferencia realizada correctamente.";
     }
 
-    public void depositar(Cuenta cuenta, double monto) {
+    public String depositar(Cuenta cuenta, double monto) {
         cuenta.depositar(monto);
+        return "Depósito realizado.";
     }
 
-    public void extraer(Cuenta cuenta, double monto) {
+    public String extraer(Cuenta cuenta, double monto) {
         cuenta.extraer(monto);
+        return "Extracción realizada.";
     }
 
-    public Cuenta buscarCuenta(String numeroCuenta) {
+    public String saldoTexto(Cuenta cuenta) {
+        return "Saldo actual: $" + cuenta.getSaldo();
+    }
+
+    public String resumenCuenta(String numeroCuenta) {
         Cuenta cuenta = banco.buscarCuentaPorNumero(numeroCuenta);
 
         if (cuenta == null) {
             throw new IllegalArgumentException("Cuenta inexistente.");
         }
 
-        return cuenta;
-    }
-
-    public String resumenCuenta(String numeroCuenta) {
-        Cuenta cuenta = buscarCuenta(numeroCuenta);
         return resumenCuenta(cuenta);
     }
 
