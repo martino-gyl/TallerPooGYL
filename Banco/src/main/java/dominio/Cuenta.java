@@ -42,10 +42,6 @@ public class Cuenta {
         return numero;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
     public Sucursal getSucursal() {
         return sucursal;
     }
@@ -60,14 +56,6 @@ public class Cuenta {
 
     public String getDni() {
         return dni;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public String getApellido() {
-        return apellido;
     }
 
     public String getNombreCompleto() {
